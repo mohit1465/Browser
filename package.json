@@ -1,0 +1,50 @@
+{
+  "name": "prizm-browser",
+  "version": "1.0.0",
+  "description": "A modern web browser built with Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "publish:app": "electron-builder -p always",
+    "publish:version": "node publish.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^28.1.0",
+    "electron-builder": "^24.9.1",
+    "electron-updater": "^6.1.7"
+  },
+  "dependencies": {
+    "electron-log": "^5.1.0",
+    "electron-update": "^5.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mohit1465/Browser.git"
+  },
+  "build": {
+    "appId": "com.prizm.browser",
+    "productName": "Prizm Browser",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "mohit1465",
+        "repo": "Browser"
+      }
+    ]
+  }
+}
