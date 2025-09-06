@@ -5,6 +5,10 @@ on:
     tags:
       - 'v*' # Push events matching v1.0, v20.15.10, etc.
 
+# Set the permissions at the workflow level
+permissions:
+  contents: write
+
 jobs:
   release:
     name: Release
@@ -15,7 +19,7 @@ jobs:
         os: [windows-latest, ubuntu-latest, macos-latest]
 
     steps:
-      - name: Check out Git repository
+      - name: Check out repository
         uses: actions/checkout@v3
 
       - name: Setup Node.js
@@ -28,27 +32,27 @@ jobs:
         run: npm ci
 
       - name: Build
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            ### Changes
+            - Auto-generated release
+            
+            ### Downloads
+            Windows, macOS, and Linux installers are attached below
           draft: false
           prerelease: false
-
-      - name: Upload Release Assets
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/*
-          asset_name: ${{ runner.os }}-release
-          asset_content_type: application/zip
+          files: |
+            dist/*.exe
+            dist/*.dmg
+            dist/*.AppImage
+            dist/*.zip
+            dist/*.blockmap
+            latest.yml
+          generate_release_notes: true
